@@ -9,35 +9,7 @@ import re
 def text_based(vAR_AI_application):
     if vAR_AI_application == "Optimize Utterances (All)":
         st.warning("Under Development")
-        # col1,col2,col3,col4 = st.columns((1,3,3.5,1.5))
-        # m1, m2, m3 = st.columns([1, 7, 1])
-        # col11,col22,col33,col44 = st.columns((1,3,3.5,1.5))
-        # m11, m22, m33 = st.columns([1, 7, 1])
-        # col111,col222,col333,col444 = st.columns((1,3,3.5,1.5))
-        # with col2:
-        #     st.write('# ')
-        #     # st.write(' ')
-        #     st.markdown("<p style='text-align: left; color: black; font-size:20px;'><span style='font-weight: bold'>Select Model Provider</span></p>", unsafe_allow_html=True)
-        # with col3:
-        #     vAR_input_model = st.selectbox("",["All","Openai(GPT)","Google(GEMINI)", "Anthropic(Cluade)"])
-        # with col3:
-        #     if st.button("Submit"):
-        #         with st.spinner("Wait for it..."):
-        #             file_path = "data/sample_qna_test.json"
-        #             update_qna_questions_with_backup(file_path)
-        #             # Load your updated JSON file
-        #             updated_file_path = "data/sample_qna_test_updated.json"  # your file path
-
-        #             with open(updated_file_path, "r", encoding="utf-8") as f:
-        #                 updated_data = f.read()
-
-        #             # Download button
-        #             st.download_button(
-        #                 label="Download Updated JSON File",
-        #                 data=updated_data,
-        #                 file_name="qna_uat_updated.json",
-        #                 mime="application/json"
-        #             )
+        
             
     elif vAR_AI_application == "Optimize Utterances":
         col1,col2,col3,col4 = st.columns((1,3,3.5,1.5))
