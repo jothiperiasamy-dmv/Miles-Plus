@@ -1,0 +1,30 @@
+{
+    "intent": "DMV_related_query",
+    "new_utterances": [
+        "What are the DMV hours of operation?",
+        "When is the DMV open?",
+        "Can I get my driver's license renewed online?",
+        "How do I schedule a DMV appointment?",
+        "Where is the nearest DMV office?",
+        "I need to register my car, what do I do?",
+        "How do I change my address with the DMV?",
+        "What do I need to bring to the DMV for a driving test?",
+        "Are DMV offices open on weekends?",
+        "Do I need an appointment for DMV services?",
+        "What's the process to get a new driver's license?",
+        "How long does it take to get a replacement license?",
+        "Can I pay DMV fees with a credit card?",
+        "How do I check my DMV appointment status?",
+        "Is the DMV open during holidays?",
+        "I lost my registration, what should I do?",
+        "Where can I find DMV forms?",
+        "Can I update my vehicle registration online?",
+        "How do I transfer my out-of-state license?",
+        "Where do I find DMV practice test materials?",
+        "What are the fees for renewing a driver's license?",
+        "How do I check my driving record?",
+        "Can I walk in for a DMV driving test?",
+        "What documents do I need for a REAL ID?"
+    ],
+    "Explainable AI": "The utterances were generated to cover a variety of ways users might ask about DMV-related information. They include questions about hours of operation, online services, appointment scheduling, nearest office locations, car registration, address changes, driving test requirements, fees, holiday hours, lost documents, forms, vehicle registration updates, out-of-state license transfers, practice test materials, and record checks. Different phrasing styles (e.g., formal/informal, direct/indirect questions) were used to reflect the diversity of how people express these inquiries."
+}

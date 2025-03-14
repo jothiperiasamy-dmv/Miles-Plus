@@ -43,7 +43,7 @@ st.markdown("<hr style=height:2.5px;margin-top:0px;width:100%;background-color:g
 #---------Side bar-------#
 with st.sidebar:
     st.markdown("<p style='text-align: center; color: white; font-size:25px;'><span style='font-weight: bold; font-family: century-gothic';></span>Solutions Scope</p>", unsafe_allow_html=True)
-    vAR_AI_application = st.selectbox("",['Select Application',"Miles Demo"],key='application')
+    vAR_AI_application = st.selectbox("",['Select Application',"Optimize Utterances (All)","Optimize Utterances", "Generate Utterances"],key='application')
     # selected = st.selectbox("",['User',"Logout"],key='text')
     vAR_LLM_model = st.selectbox("",['GEN AI Models',"gpt-3.5-turbo-16k-0613","gpt-4-0314","gpt-3.5-turbo-16k","gpt-3.5-turbo-1106","gpt-4-0613","gpt-4-0314"],key='text_llmmodel')
     vAR_LLM_framework = st.selectbox("",['Framework',"Langchain"],key='text_framework')
@@ -73,5 +73,5 @@ with st.sidebar:
         st.image("image/AzureCloud_img.png")
 
 
-if vAR_AI_application == "Miles Demo":
-    text_based()
+if vAR_AI_application != 'Select Application':
+    text_based(vAR_AI_application)

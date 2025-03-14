@@ -1,0 +1,48 @@
+{
+  "qna": [
+    {
+      "qid": "001_Test_Intent_A",
+      "q": [
+        "book appointment",
+        "schedule dmv visit",
+        "dmv appointment"
+      ],
+      "a": "Instructions for booking an appointment at DMV."
+    },
+    {
+      "qid": "002_Test_Intent_B",
+      "q": [
+        "renew license",
+        "license renewal",
+        "dmv license renewal"
+      ],
+      "a": "How to renew your driver’s license."
+    },
+    {
+      "qid": "003_Test_Intent_C",
+      "q": [
+        "transfer title",
+        "change vehicle ownership"
+      ],
+      "a": "Guidelines to transfer a vehicle title."
+    },
+    {
+      "qid": "004_Test_Intent_D",
+      "q": [
+        "lost id",
+        "replace my id",
+        "id replacement process"
+      ],
+      "a": "Steps to replace a lost or stolen ID."
+    },
+    {
+      "qid": "005_Test_Intent_E",
+      "q": [
+        "update address",
+        "change my address",
+        "dmv address update"
+      ],
+      "a": "How to update your address with DMV."
+    }
+  ]
+}
