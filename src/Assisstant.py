@@ -55,7 +55,12 @@ def utterances_gen_azure_assistant(user_input):
 
 
 import json
+import os
+import re
+from openai import AzureOpenAI  # Make sure this import matches your SDK version
+
 def azure_openai_model_for_optimizations_all(intent, utterances):
+    reduction_percent = 30
     endpoint = os.environ["AZURE_OPENAI_ENDPOINT"]
     deployment = "gpt-4o"
     subscription_key = os.environ["AZURE_OPENAI_API_KEY"]
@@ -65,58 +70,149 @@ def azure_openai_model_for_optimizations_all(intent, utterances):
         api_key=subscription_key,
         api_version="2024-05-01-preview",
     )
-
     chat_prompt = [
-        {
-            "role": "system",
-            "content": (
-                "You are an expert language model trained to optimize and consolidate user utterances for NLU systems. "
-                "Your task is to analyze a list of user utterances associated with a specific intent and generate a minimized, "
-                "high-quality list of optimized utterances while preserving full intent coverage. "
-                "Return only the list in this format: [\"Utterance1\", \"Utterance2\", ...]"
-            ),
-        },
-        {
-            "role": "user",
-            "content": f"""Optimize the following utterances for the intent: '{intent}'.
+    {
+        "role": "system",
+        "content": (
+            "You are an expert NLU optimization assistant trained to consolidate and refine user utterances for intent classification in DMV virtual assistant systems. "
+            "Your goal is to generate a concise, high-quality list of representative user utterances that fully capture the intent while minimizing redundancy. "
+            "Group similar phrases into canonical forms, remove duplicates, retain linguistic diversity, and maintain full semantic coverage. "
+            f"Reduce the utterance list by approximately {reduction_percent}% while ensuring the intent remains comprehensively covered. "
+            "Do not remove any semantically unique or critical variants. Return only the optimized utterance list in plain JSON array format: [\"Utterance1\", \"Utterance2\", ...]."
+        )
+    },
+    {
+        "role": "user",
+        "content": f"""Optimize the following utterances for the intent: '{intent}'.
 
-Here is the list of input utterances:
+Input utterance list:
 {utterances}
 
-Return the optimized utterance list in plain JSON array format only: [ ... ]""",
-        },
-    ]
+Apply a reduction of approximately {reduction_percent}% while keeping full intent coverage.
 
-    completion = client.chat.completions.create(
-        model=deployment,
-        messages=chat_prompt,
-        max_tokens=800,
-        temperature=0.7,
-        top_p=0.95,
-        frequency_penalty=0,
-        presence_penalty=0,
-        stream=False,
-    )
+Return only the optimized utterance list in plain JSON array format: ["..."]"""
+    }
+]
 
-    response_text = completion.choices[0].message.content.strip()
+#     chat_prompt = [
+#         {
+#             "role": "system",
+#             "content": (
+#                 "You are an expert language model trained to optimize and consolidate user utterances for NLU systems. "
+#                 "Your task is to analyze a list of user utterances associated with a specific intent and generate a minimized, "
+#                 "high-quality list of optimized utterances while preserving full intent coverage. "
+#                 "Return only the list in this format: [\"Utterance1\", \"Utterance2\", ...]"
+#             ),
+#         },
+#         {
+#             "role": "user",
+#             "content": f"""Optimize the following utterances for the intent: '{intent}'.
 
-    # Fallback checks
-    if not response_text.startswith("[") or "warning" in response_text.lower():
-        print(f"[Warning] GPT response contains unexpected format or warning for intent: {intent}")
-        return None
+# Here is the list of input utterances:
+# {utterances}
+
+# Return the optimized utterance list in plain JSON array format only: [ ... ]""",
+#         },
+#     ]
 
     try:
-        optimized = json.loads(response_text)
+        completion = client.chat.completions.create(
+            model=deployment,
+            messages=chat_prompt,
+            max_tokens=4096,
+            temperature=0.7,
+            top_p=0.95,
+            frequency_penalty=0,
+            presence_penalty=0,
+            stream=False,
+        )
 
-        # Ensure it is a list of strings
-        if isinstance(optimized, list) and all(isinstance(item, str) for item in optimized):
-            return optimized
+        response_text = completion.choices[0].message.content.strip()
+        print(f"[Debug] Raw model response for intent '{intent}': {response_text}")
+
+        # Extract first JSON array from response using regex
+        match = re.search(r"\[[\s\S]*?\]", response_text)
+        if match:
+            array_text = match.group(0)
+            try:
+                optimized = json.loads(array_text)
+                if isinstance(optimized, list) and all(isinstance(item, str) for item in optimized):
+                    return optimized
+                else:
+                    print(f"[Warning] Extracted content is not a valid list of strings for intent: {intent}")
+                    return None
+            except json.JSONDecodeError:
+                print(f"[Warning] Extracted array could not be parsed for intent: {intent}")
+                return None
         else:
-            print(f"[Warning] GPT returned invalid list structure for intent: {intent}")
+            print(f"[Warning] No JSON array found in model response for intent: {intent}")
             return None
-    except json.JSONDecodeError:
-        print(f"[Warning] Failed to parse JSON for intent: {intent}")
+
+    except Exception as e:
+        print(f"[Error] Exception during processing for intent '{intent}': {str(e)}")
         return None
+
+
+# def azure_openai_model_for_optimizations_all(intent, utterances):
+#     endpoint = os.environ["AZURE_OPENAI_ENDPOINT"]
+#     deployment = "gpt-4o"
+#     subscription_key = os.environ["AZURE_OPENAI_API_KEY"]
+#     client = AzureOpenAI(
+#         azure_endpoint=endpoint,
+#         api_key=subscription_key,
+#         api_version="2024-05-01-preview",
+#     )
+#     chat_prompt = [
+#         {
+#             "role": "system",
+#             "content": (
+#                 "You are an expert language model trained to optimize and consolidate user utterances for NLU systems. "
+#                 "Your task is to analyze a list of user utterances associated with a specific intent and generate a minimized, "
+#                 "high-quality list of optimized utterances while preserving full intent coverage. "
+#                 "Return only the list in this format: [\"Utterance1\", \"Utterance2\", ...]"
+#             ),
+#         },
+#         {
+#             "role": "user",
+#             "content": f"""Optimize the following utterances for the intent: '{intent}'.
+
+# Here is the list of input utterances:
+# {utterances}
+
+# Return the optimized utterance list in plain JSON array format only: [ ... ]""",
+#         },
+#     ]
+
+#     completion = client.chat.completions.create(
+#         model=deployment,
+#         messages=chat_prompt,
+#         max_tokens=800,
+#         temperature=0.7,
+#         top_p=0.95,
+#         frequency_penalty=0,
+#         presence_penalty=0,
+#         stream=False,
+#     )
+
+#     response_text = completion.choices[0].message.content.strip()
+
+#     # Fallback checks
+#     if not response_text.startswith("[") or "warning" in response_text.lower():
+#         print(f"[Warning] GPT response contains unexpected format or warning for intent: {intent}")
+#         return None
+
+#     try:
+#         optimized = json.loads(response_text)
+
+#         # Ensure it is a list of strings
+#         if isinstance(optimized, list) and all(isinstance(item, str) for item in optimized):
+#             return optimized
+#         else:
+#             print(f"[Warning] GPT returned invalid list structure for intent: {intent}")
+#             return None
+#     except json.JSONDecodeError:
+#         print(f"[Warning] Failed to parse JSON for intent: {intent}")
+#         return None
         
 import os
 import json
@@ -169,7 +265,7 @@ Please return the result in this strict JSON format only:
     completion = client.chat.completions.create(  
         model=deployment,
         messages=chat_prompt,
-        max_tokens=800,  
+        max_tokens=4096,  
         temperature=0.7,  
         top_p=0.95,  
         frequency_penalty=0,  
