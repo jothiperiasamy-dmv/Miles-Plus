@@ -74,23 +74,26 @@ def azure_openai_model_for_optimizations_all(intent, utterances):
     {
         "role": "system",
         "content": (
-            "You are an expert NLU optimization assistant trained to consolidate and refine user utterances for intent classification in DMV virtual assistant systems. "
-            "Your goal is to generate a concise, high-quality list of representative user utterances that fully capture the intent while minimizing redundancy. "
-            "Group similar phrases into canonical forms, remove duplicates, retain linguistic diversity, and maintain full semantic coverage. "
-            f"Reduce the utterance list by approximately {reduction_percent}% while ensuring the intent remains comprehensively covered. "
-            "Do not remove any semantically unique or critical variants. Return only the optimized utterance list in plain JSON array format: [\"Utterance1\", \"Utterance2\", ...]."
+            "You are a Natural Language Understanding (NLU) expert. "
+            "Your task is to **optimize an existing list of user utterances** for a specific intent without changing the core meaning of any utterance. "
+            "Focus on improving diversity, slot coverage, and phrasing — this is an optimization task, not generation from scratch.\n\n"
+            "Optimization guidelines:\n"
+            "- Maintain clear intent boundaries — do NOT introduce new intents.\n"
+            "- Remove redundant, duplicate, or overly similar utterances.\n"
+            "- Improve diversity in vocabulary, sentence structure, and phrasing.\n"
+            "- Vary slot usage positions (beginning, middle, end).\n"
+            "- Include natural variations in tone (formal/informal), punctuation, and expression.\n"
+            "- Adapt the size of the optimized list based on the original input size — maintain **semantic coverage**, not a fixed count.\n\n"
+            "Output format: Return ONLY the optimized utterance list in plain JSON array format: [\"Utterance1\", \"Utterance2\", ...]"
         )
     },
     {
         "role": "user",
-        "content": f"""Optimize the following utterances for the intent: '{intent}'.
-
-Input utterance list:
-{utterances}
-
-Apply a reduction of approximately {reduction_percent}% while keeping full intent coverage.
-
-Return only the optimized utterance list in plain JSON array format: ["..."]"""
+        "content": (
+            f"Optimize the following utterances for the intent: '{intent}'.\n\n"
+            f"Original utterance list:\n{utterances}\n\n"
+            "Return only the optimized list as a plain JSON array (no comments or extra explanation)."
+        )
     }
 ]
 
