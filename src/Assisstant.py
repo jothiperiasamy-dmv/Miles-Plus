@@ -362,3 +362,47 @@ Please return the result in this strict JSON format only:
 #     )
 
 #     return completion.choices[0].message.content
+
+
+
+def aws_amazon_tool_llm_resposne(intent):
+    endpoint = os.environ["AZURE_OPENAI_ENDPOINT"]  
+    deployment = "gpt-4o"
+    subscription_key = os.environ["AZURE_OPENAI_API_KEY"]
+
+    # Initialize Azure OpenAI Service client
+    client = AzureOpenAI(  
+        azure_endpoint=endpoint,  
+        api_key=subscription_key,  
+        api_version="2024-05-01-preview",
+    )
+    chat_prompt = [
+    {
+        "role": "system",
+        "content": (
+            "You are an advanced language model specializing in structuring unstructured text data into well-organized tables. "
+            "Your task is to extract meaningful information from user-provided unstructured text and present it in a tabular format. "
+            "Ensure that all relevant data points are captured while maintaining clarity and readability."
+        )
+    },
+    {
+        "role": "user",
+        "content": f"""give as table {intent}"""
+    }
+    ]
+
+    # Call the model
+    completion = client.chat.completions.create(  
+        model=deployment,
+        messages=chat_prompt,
+        max_tokens=4096,  
+        temperature=0.7,  
+        top_p=0.95,  
+        frequency_penalty=0,  
+        presence_penalty=0,
+        stream=False
+    )
+
+    response_text = completion.choices[0].message.content
+    
+    return response_text

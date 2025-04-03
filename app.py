@@ -2,7 +2,7 @@ import streamlit as st
 from PIL import Image
 import os
 from src.main import text_based
-# from src.APR_QA import text_based
+
 # Set page config
 st.set_page_config(layout="wide")
 
@@ -17,10 +17,10 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
+
 # Adding (css)stye to application
 with open('style/final.css') as f:
     st.markdown(f"<style>{f.read()}</style>",unsafe_allow_html=True)
-    
 
 # Adding company logo
 # imcol1, imcol2, imcol3, imcol4, imcol5 = st.columns((3,4,.5,4,3))
@@ -43,7 +43,7 @@ st.markdown("<hr style=height:2.5px;margin-top:0px;width:100%;background-color:g
 #---------Side bar-------#
 with st.sidebar:
     st.markdown("<p style='text-align: center; color: white; font-size:25px;'><span style='font-weight: bold; font-family: century-gothic';></span>Solutions Scope</p>", unsafe_allow_html=True)
-    vAR_AI_application = st.selectbox("",['Select Application',"Optimize Utterances (All)","Optimize Utterances", "Generate Utterances"],key='application')
+    vAR_AI_application = st.selectbox("",['Select Application',"Data Analysis","Optimize Utterances (All)","Optimize Utterances", "Generate Utterances", "Utterances Testing"],key='application')
     # selected = st.selectbox("",['User',"Logout"],key='text')
     vAR_LLM_model = st.selectbox("",['GEN AI Models',"gpt-3.5-turbo-16k-0613","gpt-4-0314","gpt-3.5-turbo-16k","gpt-3.5-turbo-1106","gpt-4-0613","gpt-4-0314"],key='text_llmmodel')
     vAR_LLM_framework = st.selectbox("",['Framework',"Langchain"],key='text_framework')
